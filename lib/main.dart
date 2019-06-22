@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget  {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: new MainPage()
+        home: new MainPage(),
     );
   }
 
@@ -40,11 +40,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   final List<String> titles = <String>[
     "晨会",
     "夕会",
+    "设置"
   ];
 
   final List<Widget> pages = <Widget> [
     PageA(),
-    PageB()
+    PageB(),
+    PageC()
   ];
 
   void initState() {
@@ -63,8 +65,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), title: Text(this.titles[0])),
-            BottomNavigationBarItem(icon: Icon(Icons.business), title: Text(this.titles[1])),
+            BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), title: Text(this.titles[0])),
+            BottomNavigationBarItem(icon: Icon(Icons.wb_cloudy), title: Text(this.titles[1])),
+            BottomNavigationBarItem(icon: Icon(Icons.settings), title: Text(this.titles[2])),
           ],
           fixedColor: Colors.red,
           onTap: _onItemChanged,

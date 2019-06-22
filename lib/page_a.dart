@@ -29,23 +29,10 @@ final _biggerFont = const TextStyle(fontSize: 18.0);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'PageA',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: new ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemBuilder: (context, i) {
-            if (i.isOdd) return new Divider();
-            final index = i ~/2;
-            if (index > _suggestions.length) {
-              _suggestions.addAll(this.generateWordPairs());
-            }
-            return _buildRow(i);
-          },
-        )
-        );
+    return Scaffold(
+      appBar: AppBar(title: Text('sqfite'),),
+    );
+        
   }
 
   List<String> generateWordPairs() {
