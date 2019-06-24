@@ -7,7 +7,7 @@ import 'package:mite/db/db_action.dart';
 /*
  * db demo
  */
-class PageC extends StatelessWidget {
+class PageSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

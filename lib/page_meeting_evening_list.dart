@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-class PageB extends StatelessWidget {
+import 'package:mite/page_meeting_evening_add.dart';
+class PageMeetingEveningList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +55,19 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xfff5f5f5),
+      appBar: AppBar(
+        title: Text('夕会记录'),
+        actions: <Widget>[ //导航栏右侧菜单
+          IconButton(icon: Icon(Icons.add), onPressed: this._onAddClick),
+        ],
+      ),
+//      floatingActionButton: new FloatingActionButton(
+//        elevation: 0.4,
+//        highlightElevation: 0.1,
+//        mini: false,
+//        child: Icon(Icons.add),
+//        onPressed: this._onAddClick,
+//      ),
       body: ListView.builder(
           itemCount: _suggestions.length,
           itemBuilder: (context, index) {
@@ -75,6 +88,12 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> {
             }
           }),
     );
+  }
+
+  void _onAddClick() {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return new PageMeetingEveningAdd();
+    }));
   }
 }
 
@@ -128,6 +147,7 @@ class SingleMeetingRecordWdg extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class MeetingBean {

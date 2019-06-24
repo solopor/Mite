@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 
-import 'package:mite/page_a.dart';
-import 'package:mite/page_b.dart';
-import 'package:mite/page_c.dart';
-import 'package:mite/page_d.dart';
+import 'package:mite/page_meeting_moring_list.dart';
+import 'package:mite/page_meeting_evening_list.dart';
+import 'package:mite/page_setting.dart';
 
 void main() => runApp(MyApp());
 
@@ -44,9 +43,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   ];
 
   final List<Widget> pages = <Widget> [
-    PageA(),
-    PageB(),
-    PageC()
+    PageMeetingMoringList(),
+    PageMeetingEveningList(),
+    PageSetting()
   ];
 
   void initState() {
@@ -56,13 +55,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return  new Scaffold(
-        floatingActionButton: new FloatingActionButton(
-          elevation: 0.4,
-          highlightElevation: 0.1,
-          mini: false,
-          child: Icon(Icons.add),
-          onPressed: this._onAddClick,
-        ),
+//        floatingActionButton: new FloatingActionButton(
+//          elevation: 0.4,
+//          highlightElevation: 0.1,
+//          mini: false,
+//          child: Icon(Icons.add),
+//          onPressed: this._onAddClick,
+//        ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), title: Text(this.titles[0])),
@@ -87,15 +86,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     });
   }
 
-  void _onAddClick() {
-    Navigator.of(context).push(
-      new MaterialPageRoute(
-        builder: (context) {
-          return new PageD();
-        }
-      )
-    );
-  }
+//  void _onAddClick() {
+//    Navigator.of(context).push(
+//        new MaterialPageRoute(
+//            builder: (context) {
+//              return new PageMeetingMoringAdd();
+//            }
+//        )
+//    );
+//  }
 }
 
 
