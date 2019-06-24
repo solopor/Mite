@@ -68,24 +68,24 @@ class DbTestPageState extends State<DbTestPage> {
 
   void _insert() async {
     Map<String, dynamic> row = {
-      MettingRecord.columnGroupName: '客户端',
-      MettingRecord.columnProjectName: '机器人八期',
-      MettingRecord.columnDate: '2019-06-21',
-      MettingRecord.columnWorkDetail:'虚拟现实技术在项目中的使用，带给用户更加真实的体验感',
-      MettingRecord.columnCulture:'团建一致，不畏困难，突破技术难关',
-      MettingRecord.columnMember: '张三'
+      MeetingRecord.columnGroupName: '客户端',
+      MeetingRecord.columnProjectName: '机器人八期',
+      MeetingRecord.columnDate: '2019-06-21',
+      MeetingRecord.columnWorkDetail:'虚拟现实技术在项目中的使用，带给用户更加真实的体验感',
+      MeetingRecord.columnCulture:'团建一致，不畏困难，突破技术难关',
+      MeetingRecord.columnMember: '张三'
     };
-    final id = await dbAction.insert(MettingRecord.table, row);
+    final id = await dbAction.insert(MeetingRecord.table, row);
     setState(() {
       result = 'insert result，id= $id';
     });
   }
 
   void _query() async {
-    final allRows = await dbAction.queryAllRows(MettingRecord.table);
+    final allRows = await dbAction.queryAllRows(MeetingRecord.table);
     var temp = 'query result';
     allRows.forEach((row) => {
-      temp += row[MettingRecord.columnProjectName]
+      temp += row[MeetingRecord.columnProjectName]
     });
     setState(() {
         result = 'query result= $temp';
@@ -94,19 +94,19 @@ class DbTestPageState extends State<DbTestPage> {
 
   void _update() async {
     Map<String, dynamic> row = {
-      MettingRecord.columnId   : 1,
-      MettingRecord.columnMember : 'Mary',
-      MettingRecord.columnCulture  : '1838283821838283828382883828382'
+      MeetingRecord.columnId   : 1,
+      MeetingRecord.columnMember : 'Mary',
+      MeetingRecord.columnCulture  : '1838283821838283828382883828382'
     };
-    final rowsAffected = await dbAction.update(MettingRecord.table, row);
+    final rowsAffected = await dbAction.update(MeetingRecord.table, row);
     setState(() {
         result = 'update result= $rowsAffected';
       });
   }
 
   void _delete() async {
-     final id = await dbAction.queryRowCount(MettingRecord.table);
-    final rowsDeleted = await dbAction.delete(MettingRecord.table, id);
+     final id = await dbAction.queryRowCount(MeetingRecord.table);
+    final rowsDeleted = await dbAction.delete(MeetingRecord.table, id);
      setState(() {
         result = 'deleter rowsDeleted= $rowsDeleted';
       });

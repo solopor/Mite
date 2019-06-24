@@ -32,14 +32,14 @@ class DatabaseHelper {
 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE ${MettingRecord.table}(
-        ${MettingRecord.columnId} INTEGER PRIMARY KEY,
-        ${MettingRecord.columnMember} TEXT NOT NULL,
-        ${MettingRecord.columnGroupName} TEXT NOT NULL,
-        ${MettingRecord.columnCulture} TEXT ,
-        ${MettingRecord.columnDate} TEXT NOT NULL,
-        ${MettingRecord.columnProjectName} TEXT NOT NULL,
-        ${MettingRecord.columnWorkDetail} TEXT NOT NULL
+      CREATE TABLE ${MeetingRecord.table}(
+        ${MeetingRecord.columnId} INTEGER PRIMARY KEY,
+        ${MeetingRecord.columnMember} TEXT NOT NULL,
+        ${MeetingRecord.columnGroupName} TEXT NOT NULL,
+        ${MeetingRecord.columnCulture} TEXT ,
+        ${MeetingRecord.columnDate} TEXT NOT NULL,
+        ${MeetingRecord.columnProjectName} TEXT NOT NULL,
+        ${MeetingRecord.columnWorkDetail} TEXT NOT NULL
       )
       ''');
   }

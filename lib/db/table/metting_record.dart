@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /*
  * 会议纪要
  */
-class MettingRecord {
+class MeetingRecord {
 
   static final String table = 'mettingRecord';
 
@@ -29,7 +29,7 @@ class MettingRecord {
   String culture;
   String member;
 
-  MettingRecord(this.member, this.groupName, this.porjectName, this.workDetail, this.date, this.culture);
+  MeetingRecord(this.member, this.groupName, this.porjectName, this.workDetail, this.date, this.culture);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic> {
@@ -43,7 +43,7 @@ class MettingRecord {
     };
     return map;
   }
-  MettingRecord.fromMap(Map<String,dynamic> map) {
+  MeetingRecord.fromMap(Map<String,dynamic> map) {
     groupName = map[columnGroupName];
     porjectName = map[columnProjectName];
     workDetail = map[columnWorkDetail];
