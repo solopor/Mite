@@ -7,14 +7,14 @@ import 'package:mite/db/db_action.dart';
 
 //text: "客户第一 | 团结协作 | 重在执行 | 激情澎湃 | 积德行善",
 // ignore: must_be_immutable
-class PageMeetingMoringAdd extends StatefulWidget {
+class PageMeetingAdd extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new PageMeetingMoringAddState();
+    return new PageMeetingAddState();
   }
 }
 
-class PageMeetingMoringAddState extends State<PageMeetingMoringAdd> {
+class PageMeetingAddState extends State<PageMeetingAdd> {
   DateTime _dateTime;
   var result;
   DbAction dbAction = new DbActionImpl();
@@ -39,7 +39,7 @@ class PageMeetingMoringAddState extends State<PageMeetingMoringAdd> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('新增晨会记录'),
+          title: Text('新增会议记录'),
         ),
         body: Column(
           //测试Row对齐方式，排除Column默认居中对齐的干扰

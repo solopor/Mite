@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:mite/page_meeting_moring_list.dart';
 import 'package:mite/page_meeting_evening_list.dart';
 import 'package:mite/page_setting.dart';
+import 'package:mite/page_meeting_add.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,13 +56,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return  new Scaffold(
-//        floatingActionButton: new FloatingActionButton(
-//          elevation: 0.4,
-//          highlightElevation: 0.1,
-//          mini: false,
-//          child: Icon(Icons.add),
-//          onPressed: this._onAddClick,
-//        ),
+        floatingActionButton: new FloatingActionButton(
+          elevation: 0.4,
+          highlightElevation: 0.1,
+          mini: false,
+          child: Icon(Icons.add),
+          onPressed: this._onAddClick,
+        ),
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), title: Text(this.titles[0])),
@@ -86,15 +87,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     });
   }
 
-//  void _onAddClick() {
-//    Navigator.of(context).push(
-//        new MaterialPageRoute(
-//            builder: (context) {
-//              return new PageMeetingMoringAdd();
-//            }
-//        )
-//    );
-//  }
+  void _onAddClick() {
+    Navigator.of(context).push(
+        new MaterialPageRoute(
+            builder: (context) {
+              return new PageMeetingAdd();
+            }
+        )
+    );
+  }
 }
 
 
