@@ -27,7 +27,6 @@ dependencies:
   cupertino_icons: ^0.1.2
   sqflite: ^1.0.0
   path_provider: ^0.4.1
-  marquee_flutter: ^0.1.2
 
 dev_dependencies:
   flutter_test:
