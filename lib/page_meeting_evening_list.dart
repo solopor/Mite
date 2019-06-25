@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mite/db/db_action.dart';
+import 'package:mite/db/db_action_impl.dart';
 import 'package:mite/db/table/metting_record.dart';
+
 class PageMeetingEveningList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,35 +21,47 @@ class EveMeetingRecordWdg extends StatefulWidget {
   }
 }
 
-class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> {
+class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> implements DbListener{
   final List<MeetingRecord> _list = <MeetingRecord>[
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-6-4", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-6-3", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-6-2", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-6-1", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-5-20", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-5-19", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-5-18", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-5-17", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-5-16", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名", "今天完成了xxx任务，xxx进行中", "2019-5-15", "企业文化")
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-06-04", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-06-03", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-06-02", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-06-01", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-05-20", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-05-19", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-05-18", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-05-17", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-05-16", "企业文化"),
+    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
+        "今天完成了xxx任务，xxx进行中", "2019-05-15", "企业文化")
   ];
 
-//  final List<MeetingBean> _suggestions = <MeetingBean>[
-//    MeetingBean("2019年6月4日", ["张大", "张二", "张三"], ""),
-//    MeetingBean("2019年6月3日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//    MeetingBean("2019年6月2日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//    MeetingBean("2019年6月1日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//    MeetingBean("2019年5月13日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//    MeetingBean("2019年5月12日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//    MeetingBean("2019年5月11日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//    MeetingBean("2019年5月10日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//    MeetingBean("2019年5月9日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//    MeetingBean("2019年5月8日", ["张大", "张二", "张三"], "今天完成了xxx任务，xxx进行中"),
-//  ]; //这个list应从数据库中拿出来的
+  @override
+  void initState(){
+    DbActionImpl.addDbListener(this);
+    _getData();
+  }
+
+  void _getData() async{
+    await DbActionImpl.queryAllMeetingRecord(MeetingRecord.table)
+        .then((List<MeetingRecord> list){
+      setState(() {
+        _list.removeRange(0, _list.length);
+        _list.insertAll(0, list.reversed);
+      });
+    }, onError: (e)=>{print("-----> query data from db error")});
+  }
 
   bool _isShowDateTitle(int index) {
-    //如果不这么做就从数据库里拿出数据时，就处理下作为Map吧
     if (index == 0) {
       return true;
     }
@@ -64,14 +79,6 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> {
     return false;
   }
 
-//  _getDataFromDB() async{
-//      final allRows = await DbActionImpl.queryAllRows(MettingRecord.table);//数据库对外调用改下
-//      var temp = 'query result';
-//      allRows.forEach((row) => {
-//        temp += row[MettingRecord.columnProjectName]
-//      });
-//  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,14 +86,7 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> {
       appBar: AppBar(
         title: Text('夕会记录'),
       ),
-//      floatingActionButton: new FloatingActionButton(
-//        elevation: 0.4,
-//        highlightElevation: 0.1,
-//        mini: false,
-//        child: Icon(Icons.add),
-//        onPressed: this._onAddClick,
-//      ),
-      body: ListView.builder(
+      body: _list.length>0?ListView.builder(
           itemCount: _list.length,
           itemBuilder: (context, index) {
             MeetingRecord meetingRecord = _list[index];
@@ -104,10 +104,14 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> {
             } else {
               return SingleMeetingRecordWdg(meetingRecord, index.isOdd);
             }
-          }),
+          }):Text("no data"),
     );
   }
 
+  @override
+  notifyDataHasChanged() {
+    _getData();
+  }
 }
 
 class SingleMeetingRecordWdg extends StatelessWidget {
@@ -118,7 +122,7 @@ class SingleMeetingRecordWdg extends StatelessWidget {
 
   BorderSide borderSide = BorderSide(width: 0.5, color: Color(0xffbbae8e));
 
-  responseTap(){
+  responseTap() {
     //TODO:处理点击
     print("click");
   }
@@ -126,7 +130,7 @@ class SingleMeetingRecordWdg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle =
-    TextStyle(color: Color(0xff333333), fontSize: 14, letterSpacing: 1.5);
+        TextStyle(color: Color(0xff333333), fontSize: 14, letterSpacing: 1.5);
     return GestureDetector(
       onTap: responseTap,
       child: Container(
@@ -168,13 +172,4 @@ class SingleMeetingRecordWdg extends StatelessWidget {
       ),
     );
   }
-
 }
-
-//class MeetingBean {
-//  String date;
-//  List<String> participants;
-//  String content;
-//
-//  MeetingBean(this.date, this.participants, this.content);
-//}

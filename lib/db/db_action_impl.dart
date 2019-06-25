@@ -1,38 +1,78 @@
 import 'package:mite/db/db_action.dart';
 import 'package:mite/db/database_hepler.dart';
-
+import 'package:mite/db/table/metting_record.dart';
 
 class DbActionImpl extends DbAction {
+  DatabaseHelper _databaseHelper;
 
-
-  DatabaseHelper databaseHelper;
+  static final List<DbListener> _listenerList = [];
 
   DbActionImpl() {
-    databaseHelper = DatabaseHelper.instance;
+    _databaseHelper = DatabaseHelper.instance;
   }
 
   @override
   Future insert(String table, Map<String, dynamic> row) {
-    return databaseHelper.insert(table, row);
+    return _databaseHelper.insert(table, row).then((obj){
+      notifyDataHasChanged();
+      return obj;
+    });
   }
 
   @override
   Future<List<Map<String, dynamic>>> queryAllRows(String table) {
-    return databaseHelper.queryAllRows(table);
+    return _databaseHelper.queryAllRows(table);
   }
 
   @override
   Future<int> queryRowCount(String table) {
-    return databaseHelper.queryRowCount(table);
+    return _databaseHelper.queryRowCount(table);
   }
 
   @override
   Future<int> update(String table, Map<String, dynamic> row) {
-    return databaseHelper.update(table , row);
+    return _databaseHelper.update(table, row).then((int value){
+      notifyDataHasChanged();
+      return value;
+    });
   }
 
   Future<int> delete(String table, int id) {
-    return databaseHelper.delete(table, id);
+    return _databaseHelper.delete(table, id).then((int value){
+      notifyDataHasChanged();
+      return value;
+    });
   }
-  
+
+  static Future<List<MeetingRecord>> queryAllMeetingRecord(String table) async {
+    return DbActionImpl().queryAllRows(table).then((List list) {
+      List<MeetingRecord> result = [];
+      list.forEach((mapObj) {
+        //TODO:这里拿到的List最好按照Date排序；
+        result.add(MeetingRecord(
+          mapObj[MeetingRecord.columnMember],
+          mapObj[MeetingRecord.columnGroupName],
+          mapObj[MeetingRecord.columnProjectName],
+          mapObj[MeetingRecord.columnWorkDetail],
+          mapObj[MeetingRecord.columnDate],
+          mapObj[MeetingRecord.columnCulture],
+        ));
+      });
+      return result;
+    }, onError: (e) {
+      return <MeetingRecord>[];
+    });
+  }
+
+  @override
+  static void addDbListener(DbListener dbListener) {
+    _listenerList.add(dbListener);
+  }
+
+  @override
+  void notifyDataHasChanged() {
+    _listenerList.forEach((DbListener listener){
+      listener.notifyDataHasChanged();
+    });
+  }
 }
