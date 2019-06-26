@@ -7,8 +7,21 @@ class PageMeetingEveningList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+//      backgroundColor: Color(0xfff5f5f5),
+      backgroundColor: Color(0xffffffff),
       body: Center(
-        child: EveMeetingRecordWdg(),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: TitleWdg(),
+            ),
+            Expanded(
+              flex: 4,
+              child: EveMeetingRecordWdg(),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -21,44 +34,31 @@ class EveMeetingRecordWdg extends StatefulWidget {
   }
 }
 
-class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> implements DbListener{
-  final List<MeetingRecord> _list = <MeetingRecord>[
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-06-04", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-06-03", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-06-02", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-06-01", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-05-20", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-05-19", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-05-18", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-05-17", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-05-16", "企业文化"),
-    MeetingRecord(["张大", "张二", "张三"].toString(), "客户端团队", "项目名",
-        "今天完成了xxx任务，xxx进行中", "2019-05-15", "企业文化")
-  ];
+class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg>
+    implements DbListener {
+  final List<MeetingRecord> _list = <MeetingRecord>[];
+  String noDataPrompt = "努力拉取数据中 (｡ì _ í｡)";
 
   @override
-  void initState(){
+  void initState() {
+    super.initState();
     DbActionImpl.addDbListener(this);
     _getData();
   }
 
-  void _getData() async{
-    await DbActionImpl.queryAllMeetingRecord(MeetingRecord.table)
-        .then((List<MeetingRecord> list){
+  void _getData() async {
+    await DbActionImpl.queryAllMeetingRecord(MeetingRecord.table).then(
+        (List<MeetingRecord> list) {
       setState(() {
         _list.removeRange(0, _list.length);
-        _list.insertAll(0, list.reversed);
+
+        if (list.length == 0) {
+          noDataPrompt = "暂时没有数据诶 ╮(╯▽╰)╭";
+        } else {
+          _list.insertAll(0, list.reversed);
+        }
       });
-    }, onError: (e)=>{print("-----> query data from db error")});
+    }, onError: (e) => {print("-----> query data from db error")});
   }
 
   bool _isShowDateTitle(int index) {
@@ -81,31 +81,28 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> implements DbL
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xfff5f5f5),
-      appBar: AppBar(
-        title: Text('夕会记录'),
-      ),
-      body: _list.length>0?ListView.builder(
-          itemCount: _list.length,
-          itemBuilder: (context, index) {
-            MeetingRecord meetingRecord = _list[index];
-            if (_isShowDateTitle(index)) {
-              return Column(
-                children: <Widget>[
-                  Text(
-                    meetingRecord.date
-                        .substring(0, meetingRecord.date.lastIndexOf('-')),
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
-                  SingleMeetingRecordWdg(meetingRecord, index.isOdd)
-                ],
-              );
-            } else {
-              return SingleMeetingRecordWdg(meetingRecord, index.isOdd);
-            }
-          }):Text("no data"),
-    );
+    return _list.length > 0
+        ? ListView.builder(
+            itemCount: _list.length,
+            itemBuilder: (context, index) {
+              MeetingRecord meetingRecord = _list[index];
+              if (_isShowDateTitle(index)) {
+                return Column(
+                  children: <Widget>[
+                    Text(
+                      meetingRecord.date
+                          .substring(0, meetingRecord.date.lastIndexOf('-')),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600,color: Colors.black38),
+                    ),
+                    RecordCardWdg(meetingRecord, index.isOdd)
+                  ],
+                );
+              } else {
+                return RecordCardWdg(meetingRecord, index.isOdd);
+              }
+            })
+        : NoDataWdg(noDataPrompt);
   }
 
   @override
@@ -114,15 +111,15 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg> implements DbL
   }
 }
 
-class SingleMeetingRecordWdg extends StatelessWidget {
-  MeetingRecord meetingRecord;
-  bool showBgColor;
+class RecordCardWdg extends StatelessWidget {
+  final MeetingRecord meetingRecord;
+  final bool showBgColor;
+  final BorderSide borderSide =
+      BorderSide(width: 0.5, color: Color(0xffbbae8e));
 
-  SingleMeetingRecordWdg(this.meetingRecord, this.showBgColor);
+  RecordCardWdg(this.meetingRecord, this.showBgColor);
 
-  BorderSide borderSide = BorderSide(width: 0.5, color: Color(0xffbbae8e));
-
-  responseTap() {
+  _responseTap() {
     //TODO:处理点击
     print("click");
   }
@@ -132,43 +129,116 @@ class SingleMeetingRecordWdg extends StatelessWidget {
     TextStyle textStyle =
         TextStyle(color: Color(0xff333333), fontSize: 14, letterSpacing: 1.5);
     return GestureDetector(
-      onTap: responseTap,
+      onTap: _responseTap,
       child: Container(
-        margin: EdgeInsets.all(5),
-        padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
+        margin: EdgeInsets.only(left: 12, top: 5, right: 12, bottom: 5),
+//        padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
         decoration: BoxDecoration(
-//          color: showBgColor ? Color(0xfff2f2f2) : Color(0xffffffff),
             color: Color(0xffffffff),
-            border: Border(
-                top: borderSide,
-                right: borderSide,
-                bottom: borderSide,
-                left: borderSide),
+//            border: Border(
+//                top: borderSide,
+//                right: borderSide,
+//                bottom: borderSide,
+//                left: borderSide),
+            boxShadow: [
+              BoxShadow(
+                  color: Color(0xaa999999),
+                  offset: Offset(0.5, 0.5),
+                  blurRadius: 5)
+            ],
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              '时间：' + meetingRecord.date,
-              style: textStyle,
-            ),
-            Text(
-              '参会人员: ' + meetingRecord.member,
-              style: textStyle,
-            ),
+            RecordCardTitleWdg(meetingRecord),
             Container(
               height: 0.5,
               color: Color(0xff999999),
-              margin: EdgeInsets.only(bottom: 8, top: 8),
+              margin: EdgeInsets.only(left: 5, right: 180, top: 8),
             ),
-            Text(
-              '会议内容: \r\n' + meetingRecord.workDetail,
-              style: textStyle,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis, //显示不下时显示省略号
-            )
+            Padding(
+              padding: EdgeInsets.only(left: 5, top: 8, bottom: 8),
+              child: Text(
+                '会议内容: \r\n' + meetingRecord.workDetail,
+                style: textStyle,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis, //显示不下时显示省略号
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class RecordCardTitleWdg extends StatelessWidget {
+  final MeetingRecord meetingRecord;
+
+  RecordCardTitleWdg(this.meetingRecord, {Key key}) : super(key: key);
+
+  final TextStyle _textStyle =
+      TextStyle(color: Color(0xff333333), fontSize: 14, letterSpacing: 1.5);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 5, top: 8),
+      child: Text(
+        "时间: ${meetingRecord.date}\r\n参会人员: ${meetingRecord.member}",
+        style: _textStyle,
+      ),
+    );
+  }
+}
+
+class NoDataWdg extends StatelessWidget {
+  final String content;
+
+  NoDataWdg(this.content, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Icon(
+          Icons.notifications,
+          color: Colors.amber,
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 5),
+          child: Text(
+            content,
+            style: TextStyle(fontSize: 18, color: Color(0xff666666)),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class TitleWdg extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage("image/bg_title1.jpeg"),fit: BoxFit.fill),
+      ),
+//      color: Colors.blue,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            "夕会记录",
+            style: TextStyle(fontSize: 26, color: Color(0xaa4290BE),fontWeight: FontWeight.bold),
+          ),
+          Icon(
+            Icons.brightness_2,
+            color: Color(0xaa4290BE),
+            size: 50,
+          ),
+        ],
       ),
     );
   }
