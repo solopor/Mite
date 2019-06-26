@@ -140,12 +140,17 @@ class DbTestPageState extends State<DbTestPage> {
   }
 
   void _query() async {
-    final allRows = await dbAction.queryAllRows(MeetingRecord.table);
+
+
+//    print("sql---> query: "+'SELECT * FROM $table where meetingType= ' '\'$meetingType' '\'');
+
+    final allRows = await dbAction.queryRowsByMeetingType(MeetingRecord.table,"MEETING_TYPE_EVENING");
     var temp = 'query result';
     allRows.forEach((row) => {temp += row[MeetingRecord.columnProjectName]});
     setState(() {
       result = 'query result= $temp';
     });
+    print("queryResu;t:\n"+result);
   }
 
   void _update() async {

@@ -57,10 +57,16 @@ class MeetingContentInputState extends State<MeetingContentInput> {
   var projectName;
   var workConent;
   var culture;
-  var meetingType = "TYPE_MORING";
+  var meetingType = "MEETING_TYPE_MORING";
   var dateTime;
-  final DbAction dbAction = new DbActionImpl();
   var result;
+  final DbAction dbAction = new DbActionImpl();
+
+  TextEditingController  groupTextEditingController=TextEditingController();
+  TextEditingController  memberTextEditingController=TextEditingController();
+  TextEditingController  projectTextEditingController=TextEditingController();
+  TextEditingController  workTextEditingController=TextEditingController();
+  TextEditingController  cultureTextEditingController=TextEditingController();
 
   @override
   void initState() {
@@ -92,7 +98,7 @@ class MeetingContentInputState extends State<MeetingContentInput> {
       children: <Widget>[
         Flexible(
           child: RadioListTile<String>(
-            value: 'TYPE_MORING',
+            value: 'MEETING_TYPE_MORING',
             title: Text('晨会'),
             groupValue: meetingType,
             onChanged: (value) {
@@ -104,7 +110,7 @@ class MeetingContentInputState extends State<MeetingContentInput> {
         ),
         Flexible(
           child: RadioListTile<String>(
-            value: 'TYPE_EVENING',
+            value: 'MEETING_TYPE_EVENING',
             title: Text('夕会'),
             groupValue: meetingType,
             onChanged: (value) {
@@ -140,6 +146,7 @@ class MeetingContentInputState extends State<MeetingContentInput> {
   _buildTeamName() {
     return TextField(
       keyboardType: TextInputType.text,
+      controller: groupTextEditingController,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(10.0),
         icon: Icon(Icons.card_membership),
@@ -153,6 +160,7 @@ class MeetingContentInputState extends State<MeetingContentInput> {
   _buildMemberName() {
     return TextField(
       keyboardType: TextInputType.text,
+      controller: memberTextEditingController,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(10.0),
         icon: Icon(Icons.nature_people),
@@ -166,6 +174,7 @@ class MeetingContentInputState extends State<MeetingContentInput> {
   _buildProjectName() {
     return TextField(
       keyboardType: TextInputType.text,
+      controller: projectTextEditingController,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(10.0),
         icon: Icon(Icons.print),
@@ -179,6 +188,7 @@ class MeetingContentInputState extends State<MeetingContentInput> {
   _buildWorkContent() {
     return TextField(
       keyboardType: TextInputType.text,
+      controller: workTextEditingController,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(10.0),
         icon: Icon(Icons.work),
@@ -192,6 +202,7 @@ class MeetingContentInputState extends State<MeetingContentInput> {
   _buildCulture() {
     return TextField(
       keyboardType: TextInputType.text,
+      controller: cultureTextEditingController,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.all(10.0),
         icon: Icon(Icons.business),
@@ -270,11 +281,13 @@ class MeetingContentInputState extends State<MeetingContentInput> {
       MeetingRecord.columnDate: dateTime.toString().split(".")[0],
       MeetingRecord.columnWorkDetail: workConent,
       MeetingRecord.columnCulture: culture,
-      MeetingRecord.columnMember: memberName
+      MeetingRecord.columnMember: memberName,
+      MeetingRecord.columnMeetingType:meetingType,
     };
     final id = await dbAction.insert(MeetingRecord.table, row);
     if (id > 0) {
       showMsg(context, "添加成功！");
+      clearInput();
     } else {
       showMsg(context, "添加失败！");
     }
@@ -313,6 +326,15 @@ class MeetingContentInputState extends State<MeetingContentInput> {
       duration: Duration(seconds: 1),
     );
     Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void clearInput() {
+    groupTextEditingController.clear();
+    memberTextEditingController.clear();
+    projectTextEditingController.clear();
+    workTextEditingController.clear();
+    cultureTextEditingController.clear();
+
   }
 
 }

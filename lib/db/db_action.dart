@@ -5,6 +5,7 @@ abstract class DbAction {
   Future<int> queryRowCount(String table);
 
   Future<List<Map<String, dynamic>>> queryAllRows(String table);
+  Future<List<Map<String, dynamic>>> queryRowsByMeetingType(String table,String meetingType);
 
   Future<int> update(String table, Map<String, dynamic> row);
 

@@ -13,7 +13,7 @@ class DbActionImpl extends DbAction {
 
   @override
   Future insert(String table, Map<String, dynamic> row) {
-    return _databaseHelper.insert(table, row).then((obj){
+    return _databaseHelper.insert(table, row).then((obj) {
       notifyDataHasChanged();
       return obj;
     });
@@ -25,20 +25,26 @@ class DbActionImpl extends DbAction {
   }
 
   @override
+  Future<List<Map<String, dynamic>>> queryRowsByMeetingType(
+      String table, String meetingType) {
+    return _databaseHelper.queryRowsByMeetingType(table, meetingType);
+  }
+
+  @override
   Future<int> queryRowCount(String table) {
     return _databaseHelper.queryRowCount(table);
   }
 
   @override
   Future<int> update(String table, Map<String, dynamic> row) {
-    return _databaseHelper.update(table, row).then((int value){
+    return _databaseHelper.update(table, row).then((int value) {
       notifyDataHasChanged();
       return value;
     });
   }
 
   Future<int> delete(String table, int id) {
-    return _databaseHelper.delete(table, id).then((int value){
+    return _databaseHelper.delete(table, id).then((int value) {
       notifyDataHasChanged();
       return value;
     });
@@ -50,6 +56,7 @@ class DbActionImpl extends DbAction {
       list.forEach((mapObj) {
         //TODO:这里拿到的List最好按照Date排序；
         result.add(MeetingRecord(
+          mapObj[MeetingRecord.columnMeetingType],
           mapObj[MeetingRecord.columnMember],
           mapObj[MeetingRecord.columnGroupName],
           mapObj[MeetingRecord.columnProjectName],
@@ -64,6 +71,30 @@ class DbActionImpl extends DbAction {
     });
   }
 
+
+
+  static Future<List<MeetingRecord>> queryAllMeetingRecordByMeetingType(String table,String meetingType) async {
+    return DbActionImpl().queryRowsByMeetingType(table,meetingType).then((List list) {
+      List<MeetingRecord> result = [];
+      list.forEach((mapObj) {
+        result.add(MeetingRecord(
+          mapObj[MeetingRecord.columnMeetingType],
+          mapObj[MeetingRecord.columnMember],
+          mapObj[MeetingRecord.columnGroupName],
+          mapObj[MeetingRecord.columnProjectName],
+          mapObj[MeetingRecord.columnWorkDetail],
+          mapObj[MeetingRecord.columnDate],
+          mapObj[MeetingRecord.columnCulture],
+        ));
+      });
+      print("queryAllMeetingRecordByMeetingType:\n"+result.toString());
+      return result;
+    }, onError: (e) {
+      return <MeetingRecord>[];
+    });
+  }
+
+
   @override
   static void addDbListener(DbListener dbListener) {
     _listenerList.add(dbListener);
@@ -71,7 +102,7 @@ class DbActionImpl extends DbAction {
 
   @override
   void notifyDataHasChanged() {
-    _listenerList.forEach((DbListener listener){
+    _listenerList.forEach((DbListener listener) {
       listener.notifyDataHasChanged();
     });
   }

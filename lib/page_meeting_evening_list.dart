@@ -46,9 +46,11 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg>
     _getData();
   }
 
+
   void _getData() async {
-    await DbActionImpl.queryAllMeetingRecord(MeetingRecord.table).then(
-        (List<MeetingRecord> list) {
+    await DbActionImpl.queryAllMeetingRecordByMeetingType(
+            MeetingRecord.table, "MEETING_TYPE_EVENING")
+        .then((List<MeetingRecord> list) {
       setState(() {
         _list.removeRange(0, _list.length);
 
