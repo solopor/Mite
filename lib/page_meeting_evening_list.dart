@@ -46,7 +46,6 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg>
     _getData();
   }
 
-
   void _getData() async {
     await DbActionImpl.queryAllMeetingRecordByMeetingType(
             MeetingRecord.table, "MEETING_TYPE_EVENING")
@@ -85,23 +84,30 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg>
   Widget build(BuildContext context) {
     return _list.length > 0
         ? ListView.builder(
+            padding: EdgeInsets.only(top: 0),
             itemCount: _list.length,
             itemBuilder: (context, index) {
               MeetingRecord meetingRecord = _list[index];
               if (_isShowDateTitle(index)) {
                 return Column(
                   children: <Widget>[
-                    Text(
-                      meetingRecord.date
-                          .substring(0, meetingRecord.date.lastIndexOf('-')),
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600,color: Colors.black38),
+                    Padding(
+                      padding:
+                          EdgeInsets.only(top: index == 0 ? 0 : 10, bottom: 10),
+                      child: Text(
+                        meetingRecord.date
+                            .substring(0, meetingRecord.date.lastIndexOf('-')),
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black38),
+                      ),
                     ),
-                    RecordCardWdg(meetingRecord, index.isOdd)
+                    RecordCardWdg(meetingRecord)
                   ],
                 );
               } else {
-                return RecordCardWdg(meetingRecord, index.isOdd);
+                return RecordCardWdg(meetingRecord);
               }
             })
         : NoDataWdg(noDataPrompt);
@@ -115,11 +121,10 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg>
 
 class RecordCardWdg extends StatelessWidget {
   final MeetingRecord meetingRecord;
-  final bool showBgColor;
   final BorderSide borderSide =
       BorderSide(width: 0.5, color: Color(0xffbbae8e));
 
-  RecordCardWdg(this.meetingRecord, this.showBgColor);
+  RecordCardWdg(this.meetingRecord);
 
   _responseTap() {
     //TODO:处理点击
@@ -225,7 +230,8 @@ class TitleWdg extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage("image/bg_title1.jpeg"),fit: BoxFit.fill),
+        image: DecorationImage(
+            image: AssetImage("image/bg_title1.jpeg"), fit: BoxFit.fill),
       ),
 //      color: Colors.blue,
       child: Row(
@@ -233,7 +239,10 @@ class TitleWdg extends StatelessWidget {
         children: <Widget>[
           Text(
             "夕会记录",
-            style: TextStyle(fontSize: 26, color: Color(0xaa4290BE),fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 26,
+                color: Color(0xaa4290BE),
+                fontWeight: FontWeight.bold),
           ),
           Icon(
             Icons.brightness_2,
