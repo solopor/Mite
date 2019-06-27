@@ -24,6 +24,7 @@ class WidgetA extends StatefulWidget {
 
 class PageAState extends State<WidgetA> implements DbListener {
   final List<MeetingRecord> _list = <MeetingRecord>[];
+  String date = DateTime.now().toString();
   String noDataPrompt = "努力拉取数据中 (｡ì _ í｡)";
   List<String> images = <String>[
     "image/icon_1.png",
@@ -38,13 +39,26 @@ class PageAState extends State<WidgetA> implements DbListener {
   @override
   void initState() {
     super.initState();
+    _setDate(DateTime.now().toString());
     DbActionImpl.addDbListener(this);
     _getData();
   }
 
+
+  void _setDate(String date) {
+    print("dxt-" + date + " last:${this.date}");
+    String str = date.toString();
+    str = str.substring(0, str.indexOf(" "));
+    setState(() {
+      this.date = str;
+    });
+    _getData();
+  }
+
+
   void _getData() async {
-    await DbActionImpl.queryAllMeetingRecordByMeetingType(
-            MeetingRecord.table, "MEETING_TYPE_MORNING")
+    await DbActionImpl.queryAllRowsByTypeAndDate(
+            MeetingRecord.table, "MEETING_TYPE_MORNING",date)
         .then((List<MeetingRecord> list) {
       setState(() {
         _list.removeRange(0, _list.length);
@@ -71,7 +85,10 @@ class PageAState extends State<WidgetA> implements DbListener {
         ));
   }
 
-  onDateChange(String date) {}
+  onDateChange(String date) {
+    this.date=date;
+    _getData();
+  }
 
   Widget _getMettingDetail() {
     return _list.length > 0

@@ -30,7 +30,7 @@ class _CustomeDateState extends State<CustomeDateWidget> {
     _dateArray.add(new DateItem(choose: false, date: '2019-06-04'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-05'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-06'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-07'));
+    _dateArray.add(new DateItem(choose: false, date: '2019-06-06'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-08'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-09'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-10'));
@@ -52,6 +52,9 @@ class _CustomeDateState extends State<CustomeDateWidget> {
     _dateArray.add(new DateItem(choose: false, date: '2019-06-26'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-27'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-28'));
+    _dateArray.add(new DateItem(choose: false, date: '2019-06-29'));
+    _dateArray.add(new DateItem(choose: false, date: '2019-06-30'));
+
 
     _index = _dateArray.length - 1;
     _lastIndex = 0;
