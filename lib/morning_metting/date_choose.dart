@@ -148,6 +148,9 @@ class _CustomeDateState extends State<CustomeDateWidget> {
                   width: 100,
                   height: 60,
                   padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue
+                  ),
                   child: Center(
                     child: Text(
                       "${_dateArray[index].date}",
