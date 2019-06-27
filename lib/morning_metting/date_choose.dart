@@ -58,7 +58,7 @@ class _CustomeDateState extends State<CustomeDateWidget> {
 
     _index = _dateArray.length - 1;
     _lastIndex = 0;
-    _scrollController = ScrollController();
+    _scrollController = ScrollController(initialScrollOffset: (_index - 1) * 100.0);
   }
 
   @override
@@ -85,7 +85,7 @@ class _CustomeDateState extends State<CustomeDateWidget> {
   Widget _getMoreDateWidget() {
     return new GestureDetector(
       child: new Container(
-        height: 80,
+        height: 60,
         decoration: BoxDecoration(
             color: Colors.blueGrey,
             borderRadius: BorderRadius.only(
@@ -133,7 +133,7 @@ class _CustomeDateState extends State<CustomeDateWidget> {
                   height: 60,
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: Colors.blue[300],
+                    color: Colors.blue[200],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -149,7 +149,8 @@ class _CustomeDateState extends State<CustomeDateWidget> {
                   height: 60,
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    color: Colors.lightBlue
+                    color: Colors.lightBlue,
+                    borderRadius: BorderRadius.circular(10)
                   ),
                   child: Center(
                     child: Text(
