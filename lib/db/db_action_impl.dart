@@ -106,4 +106,29 @@ class DbActionImpl extends DbAction {
       listener.notifyDataHasChanged();
     });
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> queryRowsByTypeAndDate(String table, String meetingType, String date) {
+    return _databaseHelper.queryRowsByTypeAndDate(table, meetingType, date);
+  }
+
+  static Future<List<MeetingRecord>> queryAllRowsByTypeAndDate(String table, String meetingType, String date) async {
+    return DbActionImpl().queryRowsByTypeAndDate(table, meetingType, date).then((List list) {
+      List<MeetingRecord> result = [];
+      list.forEach((mapObj) {
+        result.add(MeetingRecord(
+          mapObj[MeetingRecord.columnMeetingType],
+          mapObj[MeetingRecord.columnMember],
+          mapObj[MeetingRecord.columnGroupName],
+          mapObj[MeetingRecord.columnProjectName],
+          mapObj[MeetingRecord.columnWorkDetail],
+          mapObj[MeetingRecord.columnDate],
+          mapObj[MeetingRecord.columnCulture],
+        ));
+      });
+      return result;
+    }, onError: (e) {
+      return <MeetingRecord>[];
+    });
+  }
 }

@@ -3,39 +3,16 @@ import 'package:mite/db/db_action.dart';
 import 'package:mite/db/db_action_impl.dart';
 import 'package:mite/db/table/metting_record.dart';
 
-class PageMeetingEveningList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-//      backgroundColor: Color(0xfff5f5f5),
-      backgroundColor: Color(0xffffffff),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: TitleWdg(),
-            ),
-            Expanded(
-              flex: 4,
-              child: EveMeetingRecordWdg(),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class EveMeetingRecordWdg extends StatefulWidget {
+class PageMeetingEveningList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return EveMeetingRecordWdgState();
+    return PageMeetingEveningListState();
   }
 }
 
-class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg>
+class PageMeetingEveningListState extends State<PageMeetingEveningList>
     implements DbListener {
+  String date = DateTime.now().toString();
   final List<MeetingRecord> _list = <MeetingRecord>[];
   String noDataPrompt = "努力拉取数据中 (｡ì _ í｡)";
 
@@ -43,41 +20,75 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg>
   void initState() {
     super.initState();
     DbActionImpl.addDbListener(this);
-    _getData();
+    _setDate(DateTime.now().toString());
+    _getRecordData();
   }
 
-  void _getData() async {
-    await DbActionImpl.queryAllMeetingRecordByMeetingType(
-            MeetingRecord.table, "MEETING_TYPE_EVENING")
+  void _setDate(String date) {
+    print("dxt-" + date + " last:${this.date}");
+    String str = date.toString();
+    str = str.substring(0, str.indexOf(" "));
+    setState(() {
+      this.date = str;
+    });
+    _getRecordData();
+  }
+
+  void _getRecordData() async {
+    await DbActionImpl.queryAllRowsByTypeAndDate(
+            MeetingRecord.table, "MEETING_TYPE_EVENING", date)
         .then((List<MeetingRecord> list) {
       setState(() {
-        _list.removeRange(0, _list.length);
-
+        _list.clear();
         if (list.length == 0) {
           noDataPrompt = "暂时没有数据诶 ╮(╯▽╰)╭";
         } else {
-          _list.insertAll(0, list.reversed);
+          _list.addAll(list.reversed);
         }
       });
     }, onError: (e) => {print("-----> query data from db error")});
   }
 
-  bool _isShowDateTitle(int index) {
-    if (index == 0) {
-      return true;
-    }
-    MeetingRecord currMeetingRecord = _list[index];
-    MeetingRecord lastMeetingRecord = _list[index - 1];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xffffffff),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              alignment: Alignment.topCenter,
+              image: AssetImage("image/bg_title1.jpeg"),
+              fit: BoxFit.fitWidth),
+        ),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: TimeWdg(date, _setDate),
+            ),
+            Expanded(
+              flex: 4,
+              child: EveMeetingRecWdg(noDataPrompt, _list),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
-    String currDate = currMeetingRecord.date
-        .substring(0, currMeetingRecord.date.lastIndexOf('-'));
-    String lastDate = lastMeetingRecord.date
-        .substring(0, lastMeetingRecord.date.lastIndexOf('-'));
-    if (currDate != lastDate) {
-      return true;
-    }
+  @override
+  notifyDataHasChanged() {
+    _getRecordData();
+  }
+}
 
-    return false;
+class EveMeetingRecWdg extends StatelessWidget {
+  final List<MeetingRecord> _list = <MeetingRecord>[];
+  final String noDataPrompt;
+
+  EveMeetingRecWdg(this.noDataPrompt, List<MeetingRecord> list) {
+    _list.clear();
+    _list.addAll(list);
   }
 
   @override
@@ -88,34 +99,9 @@ class EveMeetingRecordWdgState extends State<EveMeetingRecordWdg>
             itemCount: _list.length,
             itemBuilder: (context, index) {
               MeetingRecord meetingRecord = _list[index];
-              if (_isShowDateTitle(index)) {
-                return Column(
-                  children: <Widget>[
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: index == 0 ? 0 : 10, bottom: 10),
-                      child: Text(
-                        meetingRecord.date
-                            .substring(0, meetingRecord.date.lastIndexOf('-')),
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black38),
-                      ),
-                    ),
-                    RecordCardWdg(meetingRecord)
-                  ],
-                );
-              } else {
-                return RecordCardWdg(meetingRecord);
-              }
+              return RecordCardWdg(meetingRecord);
             })
         : NoDataWdg(noDataPrompt);
-  }
-
-  @override
-  notifyDataHasChanged() {
-    _getData();
   }
 }
 
@@ -127,7 +113,7 @@ class RecordCardWdg extends StatelessWidget {
   RecordCardWdg(this.meetingRecord);
 
   _responseTap() {
-    //TODO:处理点击
+    //TODO:处理点击, 可以跳转详情页
     print("click");
   }
 
@@ -139,14 +125,8 @@ class RecordCardWdg extends StatelessWidget {
       onTap: _responseTap,
       child: Container(
         margin: EdgeInsets.only(left: 12, top: 5, right: 12, bottom: 5),
-//        padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
         decoration: BoxDecoration(
             color: Color(0xffffffff),
-//            border: Border(
-//                top: borderSide,
-//                right: borderSide,
-//                bottom: borderSide,
-//                left: borderSide),
             boxShadow: [
               BoxShadow(
                   color: Color(0xaa999999),
@@ -191,9 +171,15 @@ class RecordCardTitleWdg extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 5, top: 8),
-      child: Text(
-        "时间: ${meetingRecord.date}\r\n参会人员: ${meetingRecord.member}",
-        style: _textStyle,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              "时间: ${meetingRecord.date}\r\n项目: ${meetingRecord.porjectName}\r\n参会人员: ${meetingRecord.member}",
+              style: _textStyle,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -225,32 +211,77 @@ class NoDataWdg extends StatelessWidget {
   }
 }
 
-class TitleWdg extends StatelessWidget {
+class TimeWdg extends StatefulWidget {
+  final String date;
+  final Function changeDateFuc;
+
+  TimeWdg(this.date, this.changeDateFuc);
+
+  @override
+  State<StatefulWidget> createState() {
+    return TimeWdgState();
+  }
+}
+
+class TimeWdgState extends State<TimeWdg> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage("image/bg_title1.jpeg"), fit: BoxFit.fill),
-      ),
-//      color: Colors.blue,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "夕会记录",
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        TitleContentWdg(),
+        GestureDetector(
+          onTap: () => _tapDateAction(context),
+          child: Text(
+            "${widget.date}",
             style: TextStyle(
                 fontSize: 26,
-                color: Color(0xaa4290BE),
+//                color: Color(0xaa4290BE),
+                color: Colors.white,
                 fontWeight: FontWeight.bold),
           ),
-          Icon(
-            Icons.brightness_2,
-            color: Color(0xaa4290BE),
-            size: 50,
-          ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  _tapDateAction(BuildContext context) async {
+    Locale locale = Localizations.localeOf(context);
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2014),
+            lastDate: DateTime.now(),
+            locale: locale)
+        .then((DateTime dateTime) {
+      if (dateTime != null) {
+        widget.changeDateFuc(dateTime.toString());
+      }
+    });
+  }
+}
+
+class TitleContentWdg extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          "夕会记录",
+          style: TextStyle(
+              fontSize: 26,
+//                  color: Color(0xaa4290BE),
+              color: Colors.white,
+              fontWeight: FontWeight.bold),
+        ),
+        Icon(
+          Icons.brightness_2,
+//              color: Color(0xaa4290BE),
+          color: Colors.white,
+          size: 50,
+        ),
+      ],
     );
   }
 }

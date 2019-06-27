@@ -69,6 +69,14 @@ class DatabaseHelper {
         'SELECT * FROM $table where meetingType= ' '\'$meetingType' '\'');
   }
 
+  Future<List<Map<String, dynamic>>> queryRowsByTypeAndDate(
+      String table, String meetingType, String date) async {
+    Database db = await instance.database;
+    print("sql---> query: "+'SELECT * FROM $table where meetingType=\'$meetingType\' and date like \'$date%\'');
+    return await db.rawQuery(
+        'SELECT * FROM $table where meetingType=\'$meetingType\' and date like \'$date%\'');
+  }
+
   Future<int> update(String table, Map<String, dynamic> row) async {
     Database db = await instance.database;
     int id = row['_id'];
