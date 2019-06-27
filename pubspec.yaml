@@ -47,6 +47,13 @@ flutter:
     - image/arrow_back_white.png
     - image/ground_touxiang.png
     - image/bg_title1.jpeg
+    - image/icon_1.png
+    - image/icon_2.png
+    - image/icon_3.png
+    - image/icon_4.png
+    - image/icon_5.png
+    - image/icon_6.png
+    - image/icon_7.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

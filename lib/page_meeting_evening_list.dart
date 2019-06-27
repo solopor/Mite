@@ -175,7 +175,7 @@ class RecordCardTitleWdg extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: Text(
-              "时间: ${meetingRecord.date}\r\n项目: ${meetingRecord.porjectName}\r\n参会人员: ${meetingRecord.member}",
+              "时间: ${meetingRecord.date}\r\n项目: ${meetingRecord.projectName}\r\n参会人员: ${meetingRecord.member}",
               style: _textStyle,
             ),
           ),

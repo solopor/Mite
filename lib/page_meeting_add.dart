@@ -58,7 +58,6 @@ class MeetingContentInputState extends State<MeetingContentInput> {
   var workConent;
   var culture;
   var meetingType = "MEETING_TYPE_MORING";
-  var dateTime;
   var result;
   final DbAction dbAction = new DbActionImpl();
 
@@ -68,10 +67,21 @@ class MeetingContentInputState extends State<MeetingContentInput> {
   TextEditingController  workTextEditingController=TextEditingController();
   TextEditingController  cultureTextEditingController=TextEditingController();
 
+  String date = DateTime.now().toString();
+
   @override
   void initState() {
     super.initState();
-    dateTime = new DateTime.now();
+    _setDate(DateTime.now().toString());
+  }
+
+  void _setDate(String date) {
+    print("dxt-" + date + " last:${this.date}");
+    String str = date.toString();
+    str = str.substring(0, str.indexOf(" "));
+    setState(() {
+      this.date = str;
+    });
   }
 
   @override
@@ -80,8 +90,8 @@ class MeetingContentInputState extends State<MeetingContentInput> {
       margin: EdgeInsets.only(left: 15, top: 15, right: 15),
       child: Column(
         children: <Widget>[
+          buildTimeWdg(date, _setDate),
           _buildMeetingType(),
-          _buildTime(),
           _buildTeamName(),
           _buildMemberName(),
           _buildProjectName(),
@@ -121,25 +131,6 @@ class MeetingContentInputState extends State<MeetingContentInput> {
           ),
         ),
       ],
-    );
-  }
-
-  _buildTime() {
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              " 时间: ",
-              textScaleFactor: 1.2,
-            ),
-            Text(
-              dateTime.toString(),
-              textScaleFactor: 1.2,
-            ),
-          ]),
     );
   }
 
@@ -237,15 +228,16 @@ class MeetingContentInputState extends State<MeetingContentInput> {
     );
   }
 
+
+
   void submit(BuildContext context) async {
-    String time = dateTime.toString().split(".")[0];
 
     if (meetingType == null || meetingType.length < 1) {
       showMsg(context, "请选择会议类型!");
       return;
     }
 
-    if (time == null || time.length < 1) {
+    if (date == null || date.length < 1) {
       showMsg(context, "获取时间失败!");
       return;
     }
@@ -278,7 +270,7 @@ class MeetingContentInputState extends State<MeetingContentInput> {
     Map<String, dynamic> row = {
       MeetingRecord.columnGroupName: groupName,
       MeetingRecord.columnProjectName: projectName,
-      MeetingRecord.columnDate: dateTime.toString().split(".")[0],
+      MeetingRecord.columnDate: date,
       MeetingRecord.columnWorkDetail: workConent,
       MeetingRecord.columnCulture: culture,
       MeetingRecord.columnMember: memberName,
@@ -337,4 +329,54 @@ class MeetingContentInputState extends State<MeetingContentInput> {
 
   }
 
+
+}
+
+
+class buildTimeWdg extends StatefulWidget {
+  final String date;
+  final Function changeDateFuc;
+
+  buildTimeWdg(this.date, this.changeDateFuc);
+
+  @override
+  State<StatefulWidget> createState() {
+    return TimeWdgState();
+  }
+}
+
+class TimeWdgState extends State<buildTimeWdg> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        GestureDetector(
+          onTap: () => _tapDateAction(context),
+          child: Text(
+            "${widget.date}",
+            style: TextStyle(
+                fontSize: 26,
+                color: Colors.blue,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _tapDateAction(BuildContext context) async {
+    Locale locale = Localizations.localeOf(context);
+    showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2014),
+        lastDate: DateTime.now(),
+        locale: locale)
+        .then((DateTime dateTime) {
+      if (dateTime != null) {
+        widget.changeDateFuc(dateTime.toString());
+      }
+    });
+  }
 }

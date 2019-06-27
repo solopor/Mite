@@ -24,14 +24,14 @@ class MeetingRecord {
 
   int id;
   String groupName;
-  String porjectName;
+  String projectName;
   String workDetail;
   String date;
   String culture;
   String member;
   String meetingType;
 
-  MeetingRecord(this.meetingType, this.member, this.groupName, this.porjectName,
+  MeetingRecord(this.meetingType, this.member, this.groupName, this.projectName,
       this.workDetail, this.date, this.culture);
 
   Map<String, dynamic> toMap() {
@@ -39,7 +39,7 @@ class MeetingRecord {
       columnId: id,
       columnMember: member,
       columnGroupName: groupName,
-      columnProjectName: porjectName,
+      columnProjectName: projectName,
       columnWorkDetail: workDetail,
       columnDate: date,
       columnCulture: culture,
@@ -50,7 +50,7 @@ class MeetingRecord {
 
   MeetingRecord.fromMap(Map<String, dynamic> map) {
     groupName = map[columnGroupName];
-    porjectName = map[columnProjectName];
+    projectName = map[columnProjectName];
     workDetail = map[columnWorkDetail];
     date = map[columnDate];
     culture = map[columnCulture];
