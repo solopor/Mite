@@ -44,7 +44,6 @@ class PageAState extends State<WidgetA> implements DbListener {
     _getData();
   }
 
-
   void _setDate(String date) {
     print("dxt-" + date + " last:${this.date}");
     String str = date.toString();
@@ -55,10 +54,9 @@ class PageAState extends State<WidgetA> implements DbListener {
     _getData();
   }
 
-
   void _getData() async {
     await DbActionImpl.queryAllRowsByTypeAndDate(
-            MeetingRecord.table, "MEETING_TYPE_MORNING",date)
+            MeetingRecord.table, "MEETING_TYPE_MORNING", date)
         .then((List<MeetingRecord> list) {
       setState(() {
         _list.removeRange(0, _list.length);
@@ -75,7 +73,6 @@ class PageAState extends State<WidgetA> implements DbListener {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
         child: new Column(
           children: <Widget>[
             TitleView(),
@@ -86,7 +83,7 @@ class PageAState extends State<WidgetA> implements DbListener {
   }
 
   onDateChange(String date) {
-    this.date=date;
+    this.date = date;
     _getData();
   }
 
@@ -185,21 +182,29 @@ class NoDataWdg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Icon(
-          Icons.notifications,
-          color: Colors.amber,
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 5),
-          child: Text(
-            content,
-            style: TextStyle(fontSize: 18, color: Color(0xff666666)),
+    return Expanded(
+      child: Flex(
+        direction: Axis.vertical,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.notifications,
+                color: Colors.amber,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Text(
+                  content,
+                  style: TextStyle(fontSize: 18, color: Color(0xff666666)),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
