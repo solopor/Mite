@@ -23,37 +23,11 @@ class _CustomeDateState extends State<CustomeDateWidget> {
   @override
   void initState() {
     super.initState();
-
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-01'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-02'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-03'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-04'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-05'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-06'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-06'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-08'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-09'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-10'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-11'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-12'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-13'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-14'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-15'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-16'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-17'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-18'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-19'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-20'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-21'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-22'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-23'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-24'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-25'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-26'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-27'));
     _dateArray.add(new DateItem(choose: false, date: '2019-06-28'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-29'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-30'));
 
 
     _index = _dateArray.length - 1;
@@ -109,7 +83,9 @@ class _CustomeDateState extends State<CustomeDateWidget> {
       onTap: () {
         Scaffold.of(context).showSnackBar(
           new SnackBar(
-            content: new Text("日历功能暂未添加"),
+            content: new Text("请选择日期！"),
+            duration: Duration(seconds: 1),
+            backgroundColor: Colors.red,
             action: new SnackBarAction(
               label: "了解",
               onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
