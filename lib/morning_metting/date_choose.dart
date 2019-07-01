@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:mite/morning_metting/date.dart';
 import 'package:mite/db/table/metting_record.dart';
+import 'package:mite/util/date_util.dart';
 
 class CustomeDateWidget extends StatefulWidget {
 
@@ -16,18 +16,14 @@ class CustomeDateWidget extends StatefulWidget {
 }
 
 class _CustomeDateState extends State<CustomeDateWidget> {
-  List<DateItem> _dateArray = new List();
+  List<String> _dateArray = new List();
   int _lastIndex;
   int _index;
   ScrollController _scrollController;
   @override
   void initState() {
     super.initState();
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-24'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-25'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-26'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-27'));
-    _dateArray.add(new DateItem(choose: false, date: '2019-06-28'));
+    _dateArray = DateUtil().getDaysBetweenTwoDate(DateTime.now().subtract(Duration(days: 365)).toString(), DateTime.now().toString());
 
 
     _index = _dateArray.length - 1;
@@ -114,7 +110,7 @@ class _CustomeDateState extends State<CustomeDateWidget> {
                   ),
                   child: Center(
                     child: Text(
-                      "${_dateArray[index].date}",
+                      "${_dateArray[index]}",
                       style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ));
@@ -130,13 +126,13 @@ class _CustomeDateState extends State<CustomeDateWidget> {
                   ),
                   child: Center(
                     child: Text(
-                      "${_dateArray[index].date}",
+                      "${_dateArray[index]}",
                       style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   )),
               onTap: () {
                 this.setState(() {
-                  widget.callback(_dateArray[_index].date);
+                  widget.callback(_dateArray[_index]);
                   this._lastIndex = this._index;
                   this._index = index;
                 });
